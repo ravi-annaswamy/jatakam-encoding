@@ -52,6 +52,8 @@ B - BI - FL - C
 - Moon: **L** (Virgo)
 - Rahu: **C** (Taurus), thus Ketu automatically in Scorpio.
 
+Typically, the positions of the remaining planets (Mars, Mercury, Venus) can be derived astronomically given these positions. For increased precision, particularly the exact minute of birth, astrologers can optionally add the Navamsa positions of Moon and Lagna as a final node.
+
 ### Advantages
 - **Conciseness:** Quickly convey detailed astrological data using minimal notation.
 - **Clarity:** Easy to learn and visualize, mirroring intuitive spatial understanding.
@@ -65,4 +67,3 @@ When reading out or documenting a horoscope using this notation:
 3. Provide positions for the Sun, Moon, and Rahu.
 
 This encoding system enhances ease of memory, simplifies verbal and written exchanges among astrologers, and efficiently captures all necessary birth-time information.
-
