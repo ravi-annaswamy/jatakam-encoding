@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive South Indian Horoscope Chart</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; }
+    svg { margin-top: 20px; }
+    .cell { fill: white; stroke: black; cursor: pointer; }
+    .label { pointer-events: none; user-select: none; font-size: 16px; }
+    #encoding { margin-top: 20px; font-size: 18px; }
+    button { margin-top: 15px; padding: 5px 15px; }
+  </style>
+</head>
+<body>
+
+<h2>Interactive South Indian Horoscope Chart</h2>
+<div id="prompt">Click to place: <span id="currentPlanet">Lag</span></div>
+
+<svg id="chart" width="500" height="500"></svg>
+
+<div id="encoding">Encoding: <span id="code"></span></div>
+<button onclick="resetChart()">Reset Chart</button>
+
+<script>
+const svgNS = "http://www.w3.org/2000/svg";
+const cells = [
+  {label:'A', x:0,y:0},{label:'B', x:125,y:0},{label:'C', x:250,y:0},{label:'D', x:375,y:0},
+  {label:'E', x:0,y:125},{label:'G', x:375,y:125},
+  {label:'F', x:0,y:250},{label:'H', x:375,y:250},
+  {label:'I', x:0,y:375},{label:'J', x:125,y:375},{label:'K', x:250,y:375},{label:'L', x:375,y:375}
+];
+
+const sequence = ['Lag','Jup','Sat','Sun','Moo','Rah'];
+let placements = {};
+let currentStep = 0;
+
+const svg = document.getElementById('chart');
+
+cells.forEach(cell => {
+  const rect = document.createElementNS(svgNS, 'rect');
+  rect.setAttribute('class', 'cell');
+  rect.setAttribute('x', cell.x);
+  rect.setAttribute('y', cell.y);
+  rect.setAttribute('width', 125);
+  rect.setAttribute('height', 125);
+  rect.dataset.label = cell.label;
+  svg.appendChild(rect);
+
+  rect.addEventListener('click', () => handleCellClick(cell.label));
+});
+
+function handleCellClick(label) {
+  const planet = sequence[currentStep];
+  if (!placements[label]) placements[label] = [];
+  placements[label].push(planet);
+  currentStep++;
+  renderPlanets();
+  updatePrompt();
+  updateEncoding();
+}
+
+function renderPlanets() {
+  document.querySelectorAll('.label').forEach(el => el.remove());
+  cells.forEach(cell => {
+    const planets = placements[cell.label];
+    if (planets && planets.length) {
+      planets.forEach((p, idx) => {
+        const text = document.createElementNS(svgNS, 'text');
+        text.setAttribute('class', 'label');
+        const col = idx % 2;
+        const row = Math.floor(idx / 2);
+        text.setAttribute('x', cell.x + 40 + col * 45);
+        text.setAttribute('y', cell.y + 40 + row * 25);
+        text.textContent = p;
+        svg.appendChild(text);
+      });
+    }
+  });
+}
+
+function updatePrompt() {
+  document.getElementById('currentPlanet').textContent = sequence[currentStep] || 'Completed';
+}
+
+function updateEncoding() {
+  let encoding = '';
+  sequence.forEach(planet => {
+    Object.entries(placements).forEach(([cell, planets]) => {
+      if (planets.includes(planet)) encoding += cell;
+    });
+    if (planet === 'Lag' || planet === 'Sat' || planet === 'Moo') encoding += '-';
+  });
+  encoding = encoding.replace(/-$/, '');
+  document.getElementById('code').textContent = encoding;
+}
+
+function resetChart() {
+  placements = {};
+  currentStep = 0;
+  renderPlanets();
+  updatePrompt();
+  updateEncoding();
+}
+
+updatePrompt();
+</script>
+
+</body>
+</html>
